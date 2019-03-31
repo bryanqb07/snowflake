@@ -1,7 +1,7 @@
 import MovingObject from './moving_object';
 
 class Sprite extends MovingObject {
-    constructor(position, velocity, game, width, height, src, shrink) {
+    constructor(position, velocity, game, width, height, src, shrink, wrappable=false) {
         super({
             pos: position,
             vel: velocity,
@@ -14,7 +14,7 @@ class Sprite extends MovingObject {
         this.shrinkFactor = shrink;
         this.trueWidth = this.width / this.shrinkFactor;
         this.trueHeight = this.height / this.shrinkFactor;
-        this.isWrappable = false;
+        this.isWrappable = wrappable;
         // this.offSets = {
         //     tree: []
         // }
@@ -41,7 +41,7 @@ class Sprite extends MovingObject {
     isCollidedWith(otherObject){
         const dx = this.options.pos[0] - otherObject.options.pos[0];
         const dy = Math.abs( (this.options.pos[1] - (otherObject.options.pos[1] + otherObject.trueHeight / 2)));
-        return dy <= 5 && ((dx >= 0 && dx < 150) || (dx <= 0 && dx > -30));
+        return dy <= 5 && ((dx >= 0 && dx < 145) || (dx <= 0 && dx > -30));
     }
 
 

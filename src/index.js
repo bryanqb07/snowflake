@@ -22,11 +22,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     const testGameView = new GameView(ctx, testGame);
 
-    console.log(testGame.randXPos());
-    console.log(testGame.randXPos());
-    console.log(testGame.randXPos());
-    console.log(testGame.randXPos());
-
     testGameView.start();
 
 });
