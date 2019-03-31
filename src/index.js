@@ -8,20 +8,22 @@ import Game from './game';
 
 
 document.addEventListener("DOMContentLoaded", function (event) {
-    var canvas = document.getElementById('game-canvas');
+    const body = document.getElementsByTagName("BODY")[0];
+    const menu = document.getElementById('start-menu');
+    const button = document.getElementById('start-button');
+    const canvas = document.getElementById('game-canvas');
     canvas.height = 800;
     canvas.width = 1400;
-    var ctx =  canvas.getContext('2d');
-
-    // var test = new MovingObject({ pos: [30, 30], vel: [10, 10], 
-    // radius: 20, color: "#00FF00" });
-
-    // test.draw(ctx);
+    const ctx =  canvas.getContext('2d');
 
     const testGame = new Game(canvas.width, canvas.height);
 
     const testGameView = new GameView(ctx, testGame);
 
-    testGameView.start();
+    button.addEventListener("click", (e) => {
+        body.style.backgroundColor = 'white';
+        menu.style.display = 'none';
+        testGameView.start();
+    });
 
 });

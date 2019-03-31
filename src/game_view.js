@@ -4,16 +4,23 @@ class GameView{
     constructor(ctx, game){
         this.game = game;
         this.ctx = ctx;
+        this.move = 0;
     }
 
     moveDraw() {
-        this.game.draw(this.ctx);
-        this.game.step();
+        if(this.game.checkCollisions()){
+            clearInterval(this.move);
+            this.move = 0;
+        }else{
+            // console.log(this.game.step());
+            this.game.draw(this.ctx);
+            this.game.step();
+        }
     }
 
     start() {
         this.bindKeyHandlers();
-        setInterval(this.moveDraw.bind(this), 20);
+        this.move = setInterval(this.moveDraw.bind(this), 20);
     }
 
     bindKeyHandlers () {

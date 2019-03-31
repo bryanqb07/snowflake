@@ -22,28 +22,29 @@ class Game{
 
         this.obstacles = [];
         this.NUM_OBSTACLES = 0;
-        this.MAX_OBSTACLES = 30;
-        this.PASSED_OBSTACLES = 0;
-
-
-        
+        this.MAX_OBSTACLES = 10;
+        this.PASSED_OBSTACLES = 0;        
         this.last = new Sprite(
-            [500, 700], this.OBSTACLE_VEL, this, 900, 900, "tree.png", 4
+            [500, 700], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1
         ); // dummy var
+     
+        this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
+            this, 2000, 247, "finish.png", 1.5);
         
+        this.gameOver = false;
     }
 
     checkCollisions() {
         if(this.NUM_OBSTACLES > 0){
             this.obstacles.forEach(obstacle => {
                 if (this.boarder.isCollidedWith(obstacle)) {
-                    alert("Collision detected. Game over!");
+                    //alert("Collision detected. Game over!");
                     return true;
                 }
             });
         }
         if (this.boarder.options.pos[0] < 0 || this.boarder.options.pos[0] > 1300){
-            alert("Out of bounds!");
+            //alert("Out of bounds!");
             return true;
         }
         return false;
@@ -62,7 +63,11 @@ class Game{
     }
 
     draw(ctx){
+
         ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+        if (this.PASSED_OBSTACLES >= this.MAX_OBSTACLES) {
+            this.finishLine.draw(ctx);
+        }
         this.fences.forEach(fence => fence.draw(ctx));
         this.boarder.draw(ctx);
         this.obstacles.forEach(obstacle => obstacle.draw(ctx));
@@ -73,9 +78,9 @@ class Game{
     }
 
     generateObstacle(){
-        if(this.NUM_OBSTACLES < this.MAX_OBSTACLES && (this.last.options.pos[1] <= 700)){
+        if(this.PASSED_OBSTACLES < this.MAX_OBSTACLES && (this.last.options.pos[1] <= 700)){
             this.last = (Math.random()  * 2 >= 1) ? new Sprite(
-                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 900, 900, "tree.png", 4) :
+                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1) :
                 new Sprite(
                 [this.randXPos(), 800], this.OBSTACLE_VEL, this, 512, 512, "rock.png", 2);
             
@@ -86,10 +91,8 @@ class Game{
 
     makeFences(shift){
         for(let i = 0; i < this.FENCE_SPACER * this.MAX_FENCES; i += this.FENCE_SPACER){
-            // const fence = new Fence([shift, this.DIM_Y - i], this.OBSTACLE_VEL, this);
-            const fence = new Sprite([shift, this.DIM_Y - i], this.OBSTACLE_VEL, this,
-                634, 618, "flag.png", 12, true);
-            this.fences.push(fence);
+            this.fences.push(new Sprite([shift, this.DIM_Y - i], this.OBSTACLE_VEL, this,
+                634, 618, "flag.png", 12, true));
         }
     }
 
@@ -98,7 +101,9 @@ class Game{
             fence.move();
             this.checkWrap(fence);
         });
-
+        if (this.PASSED_OBSTACLES >= this.MAX_OBSTACLES) {
+            this.finishLine.move();
+        }
         this.boarder.move();
         this.obstacles.forEach(obstacle => {
             obstacle.move();
@@ -116,15 +121,15 @@ class Game{
 
     step() {
         if (this.checkCollisions()) { // lose condition
-            return;
+            return true;
         }
-        else if (this.PASSED_OBSTACLES >= this.MAX_OBSTACLES) { // win condition
-            alert("Level passed!");
-            return;
+        else if (this.finishLine.options.pos[1] < this.boarder.options.pos[1] - 100) { // win condition
+            return true;
         }
         else{ // play on
             this.generateObstacle();
             this.move();
+            return false;
         }
     }
 }
