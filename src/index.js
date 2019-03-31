@@ -6,6 +6,7 @@ window.GameView = GameView;
 
 import Game from './game';
 
+
 document.addEventListener("DOMContentLoaded", function (event) {
     var canvas = document.getElementById('game-canvas');
     canvas.height = 800;
@@ -20,6 +21,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
     const testGame = new Game(canvas.width, canvas.height);
 
     const testGameView = new GameView(ctx, testGame);
+
+    console.log(testGame.randXPos());
+    console.log(testGame.randXPos());
+    console.log(testGame.randXPos());
+    console.log(testGame.randXPos());
 
     testGameView.start();
 

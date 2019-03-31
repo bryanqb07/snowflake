@@ -1,11 +1,9 @@
-import MovingObject from './moving_object';
+import Sprite from './sprite';
 
 class Boarder extends MovingObject{
     constructor(position, game){
         super({
             pos: position,
-            color: "#32cd32",
-            radius: 50,
             vel: [0, 0],
             game: game
         });
