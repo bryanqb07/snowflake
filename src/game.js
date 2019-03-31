@@ -17,10 +17,35 @@ class Game{
         this.NUM_OBSTACLES = 0;
         this.MAX_OBSTACLES = 3;
         this.PASSED_OBSTACLES = 0;
+
         this.fences = [];
         this.makeFences(0);
         this.makeFences(this.DIM_X - this.fences[0].width);
 
+    }
+
+    checkCollisions() {
+        if(this.NUM_OBSTACLES > 0){
+            this.obstacles.forEach(obstacle => {
+                if (this.boarder.isCollidedWith(obstacle)) {
+                    alert("Collision detected. Game over!");
+                    return true;
+                }
+            });
+        }
+        return false;
+    }
+
+    checkWrap(obj) {
+        if (this.isOutofBounds([obj.options.pos[0], obj.options.pos[1]])) {
+            if (obj.isWrappable) {
+                obj.options.pos[1] = this.DIM_Y;
+            } else {
+                this.obstacles.pop();
+                this.NUM_OBSTACLES--;
+                this.PASSED_OBSTACLES++;
+            }
+        }
     }
 
     draw(ctx){
@@ -30,22 +55,9 @@ class Game{
         this.obstacles.forEach(obstacle => obstacle.draw(ctx));
     }
 
-    move(){
-        this.fences.forEach(fence => {
-            fence.move();
-            this.checkWrap(fence);
-        });
-        this.boarder.move();
-        this.obstacles.forEach(obstacle =>{
-            obstacle.move();
-            this.checkWrap(obstacle);
-        });
-    }
 
-    step(){
-        this.generateObstacle();
-        this.move();
-        this.checkCollisions();
+    isOutofBounds(pos) {
+        return pos[0] < 0 || pos[0] > this.DIM_X || pos[1] + this.PADDING < 0 || pos[1] > this.DIM_Y;
     }
 
     generateObstacle(){
@@ -63,28 +75,18 @@ class Game{
         }
     }
 
-    isOutofBounds(pos, buffer){
-        return pos[0] < 0 || pos[0] > this.DIM_X || pos[1] + this.PADDING < 0 || pos[1] > this.DIM_Y;
-    }
-
-    checkWrap(obj){
-        if(this.isOutofBounds([obj.options.pos[0], obj.options.pos[1]])){
-            if(obj.isWrappable){
-                obj.options.pos[1] = this.DIM_Y;
-            }else{
-                this.remove(obj);
-            }
-        }
-    }
-
-    checkCollisions(){
+    move() {
+        this.fences.forEach(fence => {
+            fence.move();
+            this.checkWrap(fence);
+        });
+        this.boarder.move();
         this.obstacles.forEach(obstacle => {
-            if (this.boarder.isCollidedWith(obstacle)) {
-                alert("Collision detected");
-                return true;
-            }
+            obstacle.move();
+            this.checkWrap(obstacle);
         });
     }
+
 
     randXPos(){
         let xVal = 0;
@@ -94,12 +96,19 @@ class Game{
         return xVal;
     }
 
-    remove(obj){
-        this.obstacles.pop();
-        this.NUM_OBSTACLES--;
-        this.PASSED_OBSTACLES++;
+    step() {
+        if (this.checkCollisions()) { // lose condition
+            return;
+        } 
+        else if (this.PASSED_OBSTACLES >= this.MAX_OBSTACLES) { // win condition
+            alert("Level passed!");
+            return;
+        }
+        else{ // play on
+            this.generateObstacle();
+            this.move();
+        }
     }
-
 }
 
 export default Game;
