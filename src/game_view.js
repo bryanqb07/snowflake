@@ -1,20 +1,26 @@
-import Game from './game.js';
-
 class GameView{
-    constructor(ctx, game){
+    constructor(ctx, game, menu){
         this.game = game;
         this.ctx = ctx;
+        this.menu = menu;
         this.move = 0;
     }
 
     moveDraw() {
-        if(this.game.checkCollisions()){
+        if(this.game.gameOver()){
             clearInterval(this.move);
-            this.move = 0;
+            // this.move = 0;
+            // console.log(this.menu);
+            this.menu.style.display = "flex";
+
         }else{
             // console.log(this.game.step());
             this.game.draw(this.ctx);
             this.game.step();
+            this.game.gameOver(this.menu); //gameover check
+            // if(this.game.NUM_LIVES == 0){
+            //     this.menu.display = "flex";
+            // }
         }
     }
 

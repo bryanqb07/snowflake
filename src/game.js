@@ -38,7 +38,9 @@ class Game{
         this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
             this, 2000, 247, "finish.png", 1.5);
         
-        this.NUM_LIVES = 3;
+        this.NUM_LIVES = 1;
+
+        this.gameOv = false;
     }
 
     checkCollisions() {
@@ -51,7 +53,7 @@ class Game{
         if (this.boarder.options.pos[0] < 0 || this.boarder.options.pos[0] > 1300){
             this.die();
         }
-        return false;
+        // return false;
     }
 
     checkWrap(obj) {
@@ -91,6 +93,12 @@ class Game{
     isOutofBounds(pos) {
         return pos[0] < 0 || pos[0] > this.DIM_X || pos[1] + this.PADDING < 0 || pos[1] > this.DIM_Y;
     }
+
+
+    gameOver(){
+        return this.gameOv;
+    }
+
 
     generateObstacle(){
         if(this.PASSED_OBSTACLES < this.MAX_OBSTACLES && 
@@ -152,27 +160,25 @@ class Game{
 
     step() {
         // level over cond
-        if (this.finishLine.options.pos[1] < this.boarder.options.pos[1] - 300) { // win condition
+        if (this.finishLine.options.pos[1] < this.boarder.options.pos[1] - 300) { 
             if(this.boarder.options.vel[1] == 0){ //level passed cond
                 this.level++;
                 this.OBSTACLE_VEL[1]--;
                 this.restart();
-                return false;
             }
-            else{ // level failed
+            else{ // level failed cond
                 this.NUM_LIVES--;
                 if (this.NUM_LIVES > 0) {
                     this.restart();
-                    return false;
                 } else {
-                    return true; // game over cond
+                   this.gameOv = true; // game over cond
                 }
             }
         }
         else{ // play on
             this.generateObstacle();
             this.move();
-            return false;
+            this.checkCollisions();
         }
     }
 }

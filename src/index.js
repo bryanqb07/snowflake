@@ -16,18 +16,20 @@ document.addEventListener("DOMContentLoaded", function (event) {
     canvas.height = 800;
     canvas.width = 1400;
     const ctx =  canvas.getContext('2d');
-    console.log(button);
-    const testGame = new Game(canvas.width, canvas.height);
-
-    const testGameView = new GameView(ctx, testGame);
 
     for(let i = 0; i < button.length; i++){
         button[i].addEventListener("click", (e) => {
+            const testGame = new Game(canvas.width, canvas.height);
+            const testGameView = new GameView(ctx, testGame, gameOverMenu);
+            
             body.style.backgroundColor = 'white';
             startMenu.style.display = 'none';
             gameOverMenu.style.display = 'none';
             testGameView.start();
+            // gameOverMenu.style.display = 'block';
         });
     }
+
+    
 
 });
