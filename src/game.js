@@ -6,9 +6,10 @@ class Game{
         this.DIM_X = width;
         this.DIM_Y = height;
         this.boarder = new Sprite(
-            [this.DIM_X / 2, 100], [0,0], this, 448, 480, "penguin.png", 5);
+            [this.DIM_X / 2, 100], [0,0], this, 448, 480, "penguin2.png", 5);
         //this.testRock = new Sprite([500, 800], [0, -5], this, 900, 900, "tree.png", 4);
-        
+        this.level = 1;
+
         this.OBSTACLE_VEL = [0, -5];
         
         this.fences = [];
@@ -18,34 +19,36 @@ class Game{
         this.makeFences(0);
         this.makeFences(this.DIM_X - this.FENCE_WIDTH);
 
+        // this.last = new Sprite(
+        //     [500, 700], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1
+        // ); // dummy var
+        this.obstacles = [new Sprite(
+            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1)];
+        // dummy var included 
 
-
-        this.obstacles = [];
-        this.NUM_OBSTACLES = 0;
-        this.MAX_OBSTACLES = 10;
+        
+        
+        this.NUM_OBSTACLES = 1;
+        this.MAX_OBSTACLES = 10 * this.level;
         this.PASSED_OBSTACLES = 0;        
-        this.last = new Sprite(
-            [500, 700], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1
-        ); // dummy var
+
      
+
         this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
             this, 2000, 247, "finish.png", 1.5);
         
-        this.gameOver = false;
+        this.NUM_LIVES = 3;
     }
 
     checkCollisions() {
-        if(this.NUM_OBSTACLES > 0){
-            this.obstacles.forEach(obstacle => {
-                if (this.boarder.isCollidedWith(obstacle)) {
-                    //alert("Collision detected. Game over!");
-                    return true;
-                }
-            });
+        for(let i = this.PASSED_OBSTACLES; i < this.NUM_OBSTACLES; i++){
+            if (this.boarder.isCollidedWith(this.obstacles[i])) {
+                this.die();
+            }
         }
+
         if (this.boarder.options.pos[0] < 0 || this.boarder.options.pos[0] > 1300){
-            //alert("Out of bounds!");
-            return true;
+            this.die();
         }
         return false;
     }
@@ -55,11 +58,16 @@ class Game{
             if (obj.isWrappable) {
                 obj.options.pos[1] = this.DIM_Y;
             } else {
-                this.obstacles.shift();
-                this.NUM_OBSTACLES--;
+                // this.obstacles.shift();
+                // this.NUM_OBSTACLES--;
                 this.PASSED_OBSTACLES++;
             }
         }
+    }
+
+    die(){
+        this.boarder.image.src = "flip-penguin.png";
+        this.boarder.options.vel[1] =  this.OBSTACLE_VEL[1] * (-3);
     }
 
     draw(ctx){
@@ -70,7 +78,13 @@ class Game{
         }
         this.fences.forEach(fence => fence.draw(ctx));
         this.boarder.draw(ctx);
-        this.obstacles.forEach(obstacle => obstacle.draw(ctx));
+       
+        for (let i = this.PASSED_OBSTACLES; i < this.NUM_OBSTACLES; i++) {
+            this.obstacles[i].draw(ctx);
+        }
+        
+        
+        
     }
 
     isOutofBounds(pos) {
@@ -78,13 +92,14 @@ class Game{
     }
 
     generateObstacle(){
-        if(this.PASSED_OBSTACLES < this.MAX_OBSTACLES && (this.last.options.pos[1] <= 700)){
-            this.last = (Math.random()  * 2 >= 1) ? new Sprite(
+        if(this.PASSED_OBSTACLES < this.MAX_OBSTACLES && 
+            (this.obstacles[this.NUM_OBSTACLES - 1].options.pos[1] <= 600 + 5 * this.level)){
+            
+            const randObstacle = (Math.random()  * 2 >= 1) ? new Sprite(
                 [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1) :
                 new Sprite(
                 [this.randXPos(), 800], this.OBSTACLE_VEL, this, 512, 512, "rock.png", 2);
-            
-            this.obstacles.push(this.last);
+            this.obstacles.push(randObstacle);
             this.NUM_OBSTACLES++;
         }
     }
@@ -101,30 +116,58 @@ class Game{
             fence.move();
             this.checkWrap(fence);
         });
-        if (this.PASSED_OBSTACLES >= this.MAX_OBSTACLES) {
+        if(this.PASSED_OBSTACLES >= this.MAX_OBSTACLES){
             this.finishLine.move();
         }
+
         this.boarder.move();
-        this.obstacles.forEach(obstacle => {
-            obstacle.move();
-            this.checkWrap(obstacle);
-        });
+
+        for (let i = this.PASSED_OBSTACLES; i < this.NUM_OBSTACLES; i++) {
+                this.obstacles[i].move();
+                this.checkWrap(this.obstacles[i]);
+        }
     }
 
     randXPos(){
         let xVal = 0;
-        while (xVal < this.PADDING || xVal > this.DIM_X - this.PADDING) {
+        while (xVal < this.PADDING || xVal > this.DIM_X - this.PADDING - 100) {
                 xVal = Math.floor(Math.random() * this.DIM_X);
         }
         return xVal;
     }
 
+    restart(){
+        this.boarder.image.src = "penguin2.png";
+        this.boarder.options.pos = [this.DIM_X / 2, 100];
+        this.boarder.options.vel = [0,0];
+        this.finishLine.options.pos[1] = 1000;
+
+
+        this.obstacles = [new Sprite(
+            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1)];
+        this.PASSED_OBSTACLES = 0;
+        this.NUM_OBSTACLES = 1;
+        // this.step();
+    }
+
     step() {
-        if (this.checkCollisions()) { // lose condition
-            return true;
-        }
-        else if (this.finishLine.options.pos[1] < this.boarder.options.pos[1] - 100) { // win condition
-            return true;
+        // level over cond
+        if (this.finishLine.options.pos[1] < this.boarder.options.pos[1] - 300) { // win condition
+            if(this.boarder.options.vel[1] == 0){ //level passed cond
+                this.level++;
+                this.OBSTACLE_VEL[1]--;
+                this.restart();
+                return false;
+            }
+            else{ // level failed
+                this.NUM_LIVES--;
+                if (this.NUM_LIVES > 0) {
+                    this.restart();
+                    return false;
+                } else {
+                    return true; // game over cond
+                }
+            }
         }
         else{ // play on
             this.generateObstacle();
