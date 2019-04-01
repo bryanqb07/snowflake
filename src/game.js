@@ -6,7 +6,7 @@ class Game{
         this.DIM_X = width;
         this.DIM_Y = height;
         this.boarder = new Sprite(
-            [this.DIM_X / 2, 100], [0,0], this, 448, 480, "penguin2.png", 5);
+            [this.DIM_X / 2, 100], [0,0], this, 448, 480, "images/penguin2.png", 5);
         //this.testRock = new Sprite([500, 800], [0, -5], this, 900, 900, "tree.png", 4);
         this.level = 1;
 
@@ -20,7 +20,7 @@ class Game{
         this.makeFences(this.DIM_X - this.FENCE_WIDTH);
 
         this.dummy = new Sprite(
-            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 2);
+            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 2);
         this.obstacles = [this.dummy];
         
         this.NUM_OBSTACLES = 1;
@@ -28,7 +28,7 @@ class Game{
         this.PASSED_OBSTACLES = 0;        
     
         this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
-            this, 2000, 247, "finish.png", 1.5);
+            this, 2000, 247, "images/finish.png", 1.5);
         
         this.NUM_LIVES = 1;
 
@@ -63,7 +63,7 @@ class Game{
     }
 
     die(){
-        this.boarder.image.src = "flip-penguin.png";
+        this.boarder.image.src = "images/flip-penguin.png";
         this.boarder.options.vel[1] =  this.OBSTACLE_VEL[1] * (-3);
     }
 
@@ -105,9 +105,9 @@ class Game{
             (this.obstacles[this.NUM_OBSTACLES - 1].options.pos[1] <= 600 + 5 * this.level)){
             
             const randObstacle = (Math.random()  * 2 >= 1) ? new Sprite(
-                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 2) :
+                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 2) :
                 new Sprite(
-                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 512, 512, "rock.png", 2);
+                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 512, 512, "images/rock.png", 2);
             this.obstacles.push(randObstacle);
             this.NUM_OBSTACLES++;
         }
@@ -116,14 +116,14 @@ class Game{
     makeFences(shift){
         for(let i = 0; i < this.FENCE_SPACER * this.MAX_FENCES; i += this.FENCE_SPACER){
             this.fences.push(new Sprite([shift, this.DIM_Y - i], this.OBSTACLE_VEL, this,
-                634, 618, "flag.png", 12, true));
+                634, 618, "images/flag.png", 12, true));
         }
     }
 
     makePenguins(shift) {
         for (let i = 0; i < this.NUM_LIVES; i++) {
             this.penguins.push(new Sprite([50 + i * 30, 25], [0, 0], this,
-                300, 300, "penguin_face.png", 10, false));
+                300, 300, "images/penguin_face.png", 10, false));
         }
     }
 
@@ -153,7 +153,7 @@ class Game{
     }
 
     restart(){
-        this.boarder.image.src = "penguin2.png";
+        this.boarder.image.src = "images/penguin2.png";
         this.boarder.options.pos = [this.DIM_X / 2, 100];
         this.boarder.options.vel = [0,0];
         this.finishLine.options.pos[1] = 1000;

@@ -1,8 +1,5 @@
-import MovingObject from './moving_object';
-window.movingObject = MovingObject;
-
 import GameView from './game_view';
-window.GameView = GameView;
+//window.GameView = GameView;
 
 import Game from './game';
 

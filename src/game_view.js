@@ -27,8 +27,16 @@ class GameView{
     }
 
     bindKeyHandlers () {
-        key('right', () => this.game.boarder.power(0,50));
-        key('left', () => this.game.boarder.power(0, -50));
+        document.addEventListener("keydown", (e) =>{
+            const keyCode = e.which;
+            // left arrow or 'a' key
+            if(keyCode == 39 || keyCode == 83){
+                this.game.boarder.power(0, 50);
+            // right arrow or 's' key
+            }else if(e.which == 37 || keyCode == 65){
+                this.game.boarder.power(0, -50);
+            }
+        });
     }
 }
 
