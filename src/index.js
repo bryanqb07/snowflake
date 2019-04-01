@@ -9,21 +9,25 @@ import Game from './game';
 
 document.addEventListener("DOMContentLoaded", function (event) {
     const body = document.getElementsByTagName("BODY")[0];
-    const menu = document.getElementById('start-menu');
-    const button = document.getElementById('start-button');
+    const startMenu = document.getElementById('start-menu');
+    const gameOverMenu = document.getElementById('gameover-menu');
+    const button = document.querySelectorAll('.game-button');
     const canvas = document.getElementById('game-canvas');
     canvas.height = 800;
     canvas.width = 1400;
     const ctx =  canvas.getContext('2d');
-
+    console.log(button);
     const testGame = new Game(canvas.width, canvas.height);
 
     const testGameView = new GameView(ctx, testGame);
 
-    button.addEventListener("click", (e) => {
-        body.style.backgroundColor = 'white';
-        menu.style.display = 'none';
-        testGameView.start();
-    });
+    for(let i = 0; i < button.length; i++){
+        button[i].addEventListener("click", (e) => {
+            body.style.backgroundColor = 'white';
+            startMenu.style.display = 'none';
+            gameOverMenu.style.display = 'none';
+            testGameView.start();
+        });
+    }
 
 });

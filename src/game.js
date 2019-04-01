@@ -22,8 +22,9 @@ class Game{
         // this.last = new Sprite(
         //     [500, 700], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1
         // ); // dummy var
-        this.obstacles = [new Sprite(
-            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1)];
+        this.dummy = new Sprite(
+            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 2);
+        this.obstacles = [this.dummy];
         // dummy var included 
 
         
@@ -96,7 +97,7 @@ class Game{
             (this.obstacles[this.NUM_OBSTACLES - 1].options.pos[1] <= 600 + 5 * this.level)){
             
             const randObstacle = (Math.random()  * 2 >= 1) ? new Sprite(
-                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1) :
+                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 2) :
                 new Sprite(
                 [this.randXPos(), 800], this.OBSTACLE_VEL, this, 512, 512, "rock.png", 2);
             this.obstacles.push(randObstacle);
@@ -130,7 +131,7 @@ class Game{
 
     randXPos(){
         let xVal = 0;
-        while (xVal < this.PADDING || xVal > this.DIM_X - this.PADDING - 100) {
+        while (xVal < this.PADDING - 100 || xVal > this.DIM_X - this.PADDING - 100) {
                 xVal = Math.floor(Math.random() * this.DIM_X);
         }
         return xVal;
@@ -143,8 +144,7 @@ class Game{
         this.finishLine.options.pos[1] = 1000;
 
 
-        this.obstacles = [new Sprite(
-            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1)];
+        this.obstacles = [this.dummy];
         this.PASSED_OBSTACLES = 0;
         this.NUM_OBSTACLES = 1;
         // this.step();

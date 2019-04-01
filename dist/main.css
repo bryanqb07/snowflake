@@ -1,20 +1,22 @@
-/* #game-canvas{
-    border: 1px solid black;
-} */
 body{
     background-color: purple;
 }
-#start-menu{
+
+.menu{
     width:  600px;
     height: 450px;
     margin: 0 auto;
-    background-image: url("menu-background.jpg");
-    border: 5px solid black;
+
+    border: 15px solid black;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
     margin-top: 100px;
+}
+
+#start-menu{
+    background-image: url("menu-background.jpg");
 }
     
 #start-menu header{
@@ -26,17 +28,20 @@ body{
 
 #start-menu span{
     color: purple;
-    font-size: 100px;
-    font-weight: 400;
+    font-size: 60px;
+    /* font-weight: 400; */
+    font-family: 'Notable', sans-serif;
+    
 }
 
 #penguin{
+    padding-top: 30px;
     height: 200px;
     width: 200px;
     margin: 0 auto;
 }
 
-#start-button{
+.game-button{
     background-color: white;
     height: 50px;
     width: 400px;
@@ -47,4 +52,23 @@ body{
 
 #canvas{
     background-color: white;
+}
+
+#gameover-menu{
+    display: none;
+    background-color: antiquewhite;
+}
+
+#gameover-menu span{
+    /* display: no */
+    color: purple;
+    font-size: 40px;
+    /* font-weight: 400; */
+    font-family: 'Notable', sans-serif;
+}
+
+#gameover-menu img{
+    /* display: no */
+    height: 300px;
+    width: 600px;
 }

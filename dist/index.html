@@ -5,17 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Snowflake</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Notable" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css">
     <script src="keymaster.js"></script>
     <script src="main.js"></script>
 </head>
 <body id="body">
-        <div id='start-menu'>
+        <div id='start-menu' class='menu'>
             <header>
                 <span>Penguin Ski</span>
                 <img id="penguin" src="penguin2.png">
             </header>
-            <button id='start-button'>Start New Game</button>
+            <button class='game-button'>Start New Game</button>
+        </div>
+        <div id="gameover-menu" class="menu">
+            <img id="gameover" src="game_over.png">
+            <span>Your Score: 0</span>
+            <br>
+            <button class="game-button">Play again?</button>
         </div>
         <canvas id='game-canvas'></canvas>
 </body>

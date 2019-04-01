@@ -40,8 +40,9 @@ class Sprite extends MovingObject {
 
     isCollidedWith(otherObject){
         const dx = this.options.pos[0] - otherObject.options.pos[0];
+    
         const dy = Math.abs( (this.options.pos[1] - (otherObject.options.pos[1] + otherObject.trueHeight / 2)));
-        return dy <= 5 && ((dx >= 0 && dx < 145) || (dx <= 0 && dx > -30));
+        return dy <= 5 && ((dx >= 0 && dx < 165) || (dx <= 0 && dx > -30));
     }
 
 
