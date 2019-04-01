@@ -1,26 +1,23 @@
 class GameView{
-    constructor(ctx, game, menu){
+    constructor(ctx, game, menu, score){
         this.game = game;
         this.ctx = ctx;
         this.menu = menu;
+        this.score = score;
         this.move = 0;
     }
 
     moveDraw() {
         if(this.game.gameOver()){
-            clearInterval(this.move);
-            // this.move = 0;
-            // console.log(this.menu);
-            this.menu.style.display = "flex";
-
-        }else{
-            // console.log(this.game.step());
             this.game.draw(this.ctx);
             this.game.step();
-            this.game.gameOver(this.menu); //gameover check
-            // if(this.game.NUM_LIVES == 0){
-            //     this.menu.display = "flex";
-            // }
+            clearInterval(this.move);
+            this.menu.childNodes[3].innerHTML = "Your Score: ".concat(this.game.getScore());
+            this.menu.style.display = "flex";
+        }else{
+            this.game.draw(this.ctx);
+            this.game.step();
+            this.score.innerHTML = this.game.getScore();
         }
     }
 
@@ -30,16 +27,9 @@ class GameView{
     }
 
     bindKeyHandlers () {
-        // key('up', () => this.game.ship.power([0, -1]));
-        // key('down', () => this.game.ship.power([0, 1]));
         key('right', () => this.game.boarder.power(0,50));
         key('left', () => this.game.boarder.power(0, -50));
-        // key('up', () => {
-        //     this.game.boarder.power(1, -15);
-        //     this.game.boarder.power(1, 15);
-        // });
     }
 }
-
 
 export default GameView;

@@ -6,7 +6,6 @@ body{
     width:  600px;
     height: 450px;
     margin: 0 auto;
-
     border: 15px solid black;
     display: flex;
     flex-direction: column;
@@ -48,6 +47,9 @@ body{
     color: skyblue;
     border-radius: 5px;
     margin: 0 auto;
+    font-family: 'Notable', sans-serif;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 #canvas{
@@ -71,7 +73,17 @@ body{
 }
 
 #gameover-menu img{
-    /* display: no */
     height: 300px;
     width: 600px;
+}
+
+#score-box{
+    z-index: 1;
+    position: absolute;
+    margin-top: 25px;
+    margin-left: 1200px;
+    color: purple;
+    font-size: 15px;
+    /* font-weight: 400; */
+    font-family: 'Notable', sans-serif;
 }

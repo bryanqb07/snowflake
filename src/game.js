@@ -19,27 +19,23 @@ class Game{
         this.makeFences(0);
         this.makeFences(this.DIM_X - this.FENCE_WIDTH);
 
-        // this.last = new Sprite(
-        //     [500, 700], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 1
-        // ); // dummy var
         this.dummy = new Sprite(
             [500, 600], this.OBSTACLE_VEL, this, 600, 300, "tree3.png", 2);
         this.obstacles = [this.dummy];
-        // dummy var included 
-
-        
         
         this.NUM_OBSTACLES = 1;
         this.MAX_OBSTACLES = 10 * this.level;
         this.PASSED_OBSTACLES = 0;        
-
-     
-
+    
         this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
             this, 2000, 247, "finish.png", 1.5);
         
         this.NUM_LIVES = 1;
 
+        this.penguins = []; // represents # of lives
+        this.makePenguins();
+
+        this.score = 0;
         this.gameOv = false;
     }
 
@@ -61,8 +57,6 @@ class Game{
             if (obj.isWrappable) {
                 obj.options.pos[1] = this.DIM_Y;
             } else {
-                // this.obstacles.shift();
-                // this.NUM_OBSTACLES--;
                 this.PASSED_OBSTACLES++;
             }
         }
@@ -74,8 +68,8 @@ class Game{
     }
 
     draw(ctx){
-
         ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+
         if (this.PASSED_OBSTACLES >= this.MAX_OBSTACLES) {
             this.finishLine.draw(ctx);
         }
@@ -84,6 +78,10 @@ class Game{
        
         for (let i = this.PASSED_OBSTACLES; i < this.NUM_OBSTACLES; i++) {
             this.obstacles[i].draw(ctx);
+        }
+
+        for(let i = 0; i < this.NUM_LIVES; i++){
+            this.penguins[i].draw(ctx);
         }
         
         
@@ -94,11 +92,13 @@ class Game{
         return pos[0] < 0 || pos[0] > this.DIM_X || pos[1] + this.PADDING < 0 || pos[1] > this.DIM_Y;
     }
 
-
     gameOver(){
         return this.gameOv;
     }
 
+    getScore(){
+        return this.score;
+    }
 
     generateObstacle(){
         if(this.PASSED_OBSTACLES < this.MAX_OBSTACLES && 
@@ -117,6 +117,13 @@ class Game{
         for(let i = 0; i < this.FENCE_SPACER * this.MAX_FENCES; i += this.FENCE_SPACER){
             this.fences.push(new Sprite([shift, this.DIM_Y - i], this.OBSTACLE_VEL, this,
                 634, 618, "flag.png", 12, true));
+        }
+    }
+
+    makePenguins(shift) {
+        for (let i = 0; i < this.NUM_LIVES; i++) {
+            this.penguins.push(new Sprite([50 + i * 30, 25], [0, 0], this,
+                300, 300, "penguin_face.png", 10, false));
         }
     }
 
@@ -139,7 +146,7 @@ class Game{
 
     randXPos(){
         let xVal = 0;
-        while (xVal < this.PADDING - 100 || xVal > this.DIM_X - this.PADDING - 100) {
+        while (xVal < this.FENCE_WIDTH || xVal > this.DIM_X - this.PADDING - 100) {
                 xVal = Math.floor(Math.random() * this.DIM_X);
         }
         return xVal;
@@ -168,6 +175,7 @@ class Game{
             }
             else{ // level failed cond
                 this.NUM_LIVES--;
+                this.penguins.pop();
                 if (this.NUM_LIVES > 0) {
                     this.restart();
                 } else {
@@ -176,6 +184,7 @@ class Game{
             }
         }
         else{ // play on
+            this.score += this.level;
             this.generateObstacle();
             this.move();
             this.checkCollisions();
