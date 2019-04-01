@@ -65,10 +65,8 @@ body{
 }
 
 #gameover-menu span{
-    /* display: no */
     color: purple;
     font-size: 40px;
-    /* font-weight: 400; */
     font-family: 'Notable', sans-serif;
 }
 
@@ -84,6 +82,5 @@ body{
     margin-left: 1200px;
     color: purple;
     font-size: 15px;
-    /* font-weight: 400; */
     font-family: 'Notable', sans-serif;
 }

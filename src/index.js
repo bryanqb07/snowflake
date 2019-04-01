@@ -1,8 +1,5 @@
 import GameView from './game_view';
-//window.GameView = GameView;
-
 import Game from './game';
-
 
 document.addEventListener("DOMContentLoaded", function (event) {
     const body = document.getElementsByTagName("BODY")[0];
@@ -26,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
             startMenu.style.display = 'none';
             gameOverMenu.style.display = 'none';
             testGameView.start();
-            // gameOverMenu.style.display = 'block';
         });
     }
 

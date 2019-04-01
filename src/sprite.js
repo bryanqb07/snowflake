@@ -29,8 +29,8 @@ class Sprite extends MovingObject {
             this.height,
             this.options.pos[0],
             this.options.pos[1],
-            this.width / this.shrinkFactor,
-            this.height / this.shrinkFactor
+            this.trueWidth,
+            this.trueHeight
         );
     }
 
@@ -39,13 +39,22 @@ class Sprite extends MovingObject {
     }
 
     isCollidedWith(otherObject){
-        const dx = this.options.pos[0] - otherObject.options.pos[0];
-    
+
+        // pictures widths vary by obstacle 
+        const kludge = otherObject.width == 600 ? [-130, 60] : [-208, 72];
+        // console.log(kludge);
+        const dx = this.options.pos[0] - otherObject.options.pos[0] - otherObject.trueWidth / 2;
+        // console.log("boarder truewidth: ", this.trueWidth);
+        // console.log("boarder x pos: ", this.options.pos[0]);
+        // console.log("obj truewidth: ", otherObject.trueWidth);
+        // console.log("obj x pos: ", this.options.pos[0]);
+        // console.log(dx);
+
         const dy = Math.abs( (this.options.pos[1] - (otherObject.options.pos[1] + otherObject.trueHeight / 2)));
-        return dy <= 5 && ((dx >= 0 && dx < 165) || (dx <= 0 && dx > -30));
+        
+        return dy <= Math.abs(otherObject.options.vel[1]) && (dx <= 0 && dx > kludge[0] || dx > 0 && dx < kludge[1]); 
+        
     }
-
-
 }
 
 export default Sprite;

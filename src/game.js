@@ -20,11 +20,14 @@ class Game{
         this.makeFences(this.DIM_X - this.FENCE_WIDTH);
 
         this.dummy = new Sprite(
-            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 2);
+            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 1);
+        // //test
+        // this.testRock = new Sprite(
+        //     [500, 600], this.OBSTACLE_VEL, this, 512, 512, "images/rock.png", 2);
+        // // //
         this.obstacles = [this.dummy];
-        
         this.NUM_OBSTACLES = 1;
-        this.MAX_OBSTACLES = 10 * this.level;
+        this.MAX_OBSTACLES = 10;
         this.PASSED_OBSTACLES = 0;        
     
         this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
@@ -49,7 +52,6 @@ class Game{
         if (this.boarder.options.pos[0] < 0 || this.boarder.options.pos[0] > 1300){
             this.die();
         }
-        // return false;
     }
 
     checkWrap(obj) {
@@ -105,7 +107,7 @@ class Game{
             (this.obstacles[this.NUM_OBSTACLES - 1].options.pos[1] <= 600 + 5 * this.level)){
             
             const randObstacle = (Math.random()  * 2 >= 1) ? new Sprite(
-                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 2) :
+                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 1) :
                 new Sprite(
                 [this.randXPos(), 800], this.OBSTACLE_VEL, this, 512, 512, "images/rock.png", 2);
             this.obstacles.push(randObstacle);
@@ -120,7 +122,7 @@ class Game{
         }
     }
 
-    makePenguins(shift) {
+    makePenguins() {
         for (let i = 0; i < this.NUM_LIVES; i++) {
             this.penguins.push(new Sprite([50 + i * 30, 25], [0, 0], this,
                 300, 300, "images/penguin_face.png", 10, false));
@@ -145,9 +147,9 @@ class Game{
     }
 
     randXPos(){
-        let xVal = 0;
-        while (xVal < this.FENCE_WIDTH || xVal > this.DIM_X - this.PADDING - 100) {
-                xVal = Math.floor(Math.random() * this.DIM_X);
+        let xVal = -20;
+        while (xVal <= -20 || xVal > this.DIM_X - this.PADDING - 150 - 20) {
+                xVal = Math.floor(Math.random() * this.DIM_X - 20);
         }
         return xVal;
     }
@@ -157,12 +159,12 @@ class Game{
         this.boarder.options.pos = [this.DIM_X / 2, 100];
         this.boarder.options.vel = [0,0];
         this.finishLine.options.pos[1] = 1000;
-
-
+        this.dummy.options.pos = [500, 600]; 
+        
         this.obstacles = [this.dummy];
         this.PASSED_OBSTACLES = 0;
         this.NUM_OBSTACLES = 1;
-        // this.step();
+        this.MAX_OBSTACLES += this.level * 5;
     }
 
     step() {
@@ -170,7 +172,7 @@ class Game{
         if (this.finishLine.options.pos[1] < this.boarder.options.pos[1] - 300) { 
             if(this.boarder.options.vel[1] == 0){ //level passed cond
                 this.level++;
-                this.OBSTACLE_VEL[1]--;
+                this.OBSTACLE_VEL[1] -= 2;
                 this.restart();
             }
             else{ // level failed cond
