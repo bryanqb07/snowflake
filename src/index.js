@@ -12,14 +12,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
     const canvas = document.getElementById('game-canvas');
     const score = document.getElementById('score');
     
-
     canvas.height = 800;
     canvas.width = 1400;
     const ctx =  canvas.getContext('2d');
     
-
-
-
     for(let i = 0; i < button.length; i++){
         button[i].addEventListener("click", (e) => {
             const testGame = new Game(canvas.width, canvas.height);

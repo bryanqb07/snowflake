@@ -19,7 +19,7 @@ class Game{
         this.MAX_OBSTACLES = 10;
         this.PASSED_OBSTACLES = 0;
 
-        this.NUM_LIVES = 1;
+        this.NUM_LIVES = 3;
         this.level = 1;
         this.score = 0;
         this.gameOv = false;
