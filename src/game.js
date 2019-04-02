@@ -1,4 +1,5 @@
 import Sprite from './sprite';
+import specs from './specs'; // contains specs for all objects
 
 class Game{
     constructor(width, height) {
@@ -11,44 +12,49 @@ class Game{
         this.START_Y = 800;
         this.OBSTACLE_VEL = [0, -5];
 
+        this.FENCE_SPACER = 80;
+        this.FENCE_WIDTH = 50;
+        this.MAX_FENCES = 12;
+
         this.NUM_OBSTACLES = 1;
         this.MAX_OBSTACLES = 10;
         this.PASSED_OBSTACLES = 0;
 
-        this.level = 1;
         this.NUM_LIVES = 1;
+        this.level = 1;
         this.score = 0;
         this.gameOv = false;
 
         /////
 
         // Object specs
-        this.offsets = {
-            fence: [0, 0],
-            finish: [0, 0],
-            lives: [0, 0],
-            penguin: [0, 0],
-            rock: [-208, 72],
-            tree: [-130, 60]
-        };
+        // this.offsets = {
+        //     fence: [0, 0],
+        //     finish: [0, 0],
+        //     lives: [0, 0],
+        //     penguin: [0, 0],
+        //     rock: [-208, 72],
+        //     tree: [-130, 60]
+        // };
 
-        this.dims = { //dimensions
-            fence: [634, 618, 12], // width height shrinkFactor
-            finish: [2000, 247, 1.5],
-            lives: [300, 300, 10],
-            penguin: [448, 480, 5],
-            rock: [512, 512, 2], 
-            tree: [600, 300, 1]
-        };
+        // this.dims = { //dimensions
+        //     fence: [634, 618, 12], // width height shrinkFactor
+        //     finish: [2000, 247, 1.5],
+        //     lives: [300, 300, 10],
+        //     penguin: [448, 480, 5],
+        //     rock: [512, 512, 2], 
+        //     tree: [600, 300, 1]
+        // };
 
-        this.srcs = {
-            fence: "images/flag.png",
-            finish: "images/finish.png",
-            lives: "images/penguin_face.png",
-            penguin: "images/penguin2.png", 
-            rock: "images/rock.png",
-            tree: "images/tree3.png"
-        };
+        // this.srcs = {
+        //     fence: "images/flag.png",
+        //     finish: "images/finish.png",
+        //     die: "images/flip-penguin.png",
+        //     lives: "images/penguin_face.png",
+        //     penguin: "images/penguin2.png", 
+        //     rock: "images/rock.png",
+        //     tree: "images/tree3.png"
+        // };
 
         /////
 
@@ -56,20 +62,18 @@ class Game{
         // Sprite(position, velocity, game, dimensions, imgsrc, offsets)
 
         this.boarder = new Sprite(
-            [this.DIM_X / 2, 100], [0,0], this, this.dims.penguin, 
-            this.srcs.penguin, this.offsets.penguin);
+            [this.DIM_X / 2, 100], [0,0], this, specs.dims.penguin, 
+            specs.srcs.penguin, specs.offsets.penguin);
 
         this.fences = [];
-        this.FENCE_SPACER = 80;
-        this.FENCE_WIDTH = 50;
-        this.MAX_FENCES = 12;
+
         this.makeFences(0);
         this.makeFences(this.DIM_X - this.FENCE_WIDTH);
 
 
         this.firstObstacle = new Sprite(
-            [500, 600], this.OBSTACLE_VEL, this, this.dims.tree, 
-            this.srcs.tree, this.offsets.tree);
+            [500, 600], this.OBSTACLE_VEL, this, specs.dims.tree, 
+            specs.srcs.tree, specs.offsets.tree);
         
         // this.testRock = new Sprite([500, 800], this.OBSTACLE_VEL, this, 
         //     this.dims.rock, this.srcs.rock, this.offsets.rock);
@@ -77,12 +81,10 @@ class Game{
         this.obstacles = [this.firstObstacle];
 
         this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
-            this, this.dims.finish, this.srcs.finish, this.offsets.finish);
+            this, specs.dims.finish, specs.srcs.finish, specs.offsets.finish);
         
         this.lives = []; // represents # of lives
         this.makeLives();
-
-
     }
 
     checkCollisions() {
@@ -108,7 +110,7 @@ class Game{
     }
 
     die(){
-        this.boarder.image.src = "images/flip-penguin.png";
+        this.boarder.image.src = specs.srcs.die;
         this.boarder.options.vel[1] =  this.OBSTACLE_VEL[1] * (-3);
     }
 
@@ -148,11 +150,11 @@ class Game{
             
             //generate tree if random num >= 1, rock otherwise
             const randObstacle = (Math.random()  * 2 >= 1) ? new Sprite(
-                [this.randXPos(), this.START_Y], this.OBSTACLE_VEL, this, this.dims.tree, 
-                this.srcs.tree, this.offsets.tree) :
+                [this.randXPos(), this.START_Y], this.OBSTACLE_VEL, this, specs.dims.tree, 
+                specs.srcs.tree, specs.offsets.tree) :
                 new Sprite(
-                [this.randXPos(), this.START_Y], this.OBSTACLE_VEL, this, this.dims.rock,
-                 this.srcs.rock, this.offsets.rock);
+                [this.randXPos(), this.START_Y], this.OBSTACLE_VEL, this, specs.dims.rock,
+                 specs.srcs.rock, specs.offsets.rock);
 
             this.obstacles.push(randObstacle);
             this.NUM_OBSTACLES++;
@@ -162,14 +164,14 @@ class Game{
     makeFences(shift){
         for(let i = 0; i < this.FENCE_SPACER * this.MAX_FENCES; i += this.FENCE_SPACER){
             this.fences.push(new Sprite([shift, this.DIM_Y - i], this.OBSTACLE_VEL, this,
-                this.dims.fence, this.srcs.fence, this.offsets.fence, true));
+                specs.dims.fence, specs.srcs.fence, specs.offsets.fence, true));
         }
     }
 
     makeLives() {
         for (let i = 0; i < this.NUM_LIVES; i++) {
             this.lives.push(new Sprite([50 + i * 30, 25], [0, 0], this,
-                this.dims.lives, this.srcs.lives, this.offsets.lives, false));
+                specs.dims.lives, specs.srcs.lives, specs.offsets.lives, false));
         }
     }
 
@@ -199,7 +201,7 @@ class Game{
     }
 
     restart(){
-        this.boarder.image.src = "images/penguin2.png";
+        this.boarder.image.src = specs.srcs.penguin;
         this.boarder.options.pos = [this.DIM_X / 2, 100];
         this.boarder.options.vel = [0,0];
         this.finishLine.options.pos[1] = 1000;
