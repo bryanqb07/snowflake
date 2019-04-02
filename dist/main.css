@@ -62,6 +62,7 @@ body{
     z-index: 1;
     position: absolute;
     margin-left: 400px;
+    text-align: center;
 }
 
 .stop-menu span{
