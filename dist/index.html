@@ -15,21 +15,59 @@
                 <span>Penguin Ski</span>
                 <img id="penguin" src="images/penguin2.png" alt="penguin">
             </header>
-            <button class='game-button'>Start New Game</button>
+            <button class='button game-button'>Start New Game</button>
+            <button id="instructions" class='button'>Instructions</button>
         </div>
+
+        <div id='instruction-menu' class='menu'>
+            <div>
+                <span>Use the left and right arrow keys to move</span>
+                <br>
+                <br>
+                <div class="img-wrapper">
+                    <span>&larr;</span>
+                    <img class="instruction-img" src="images/penguin2.png" alt="penguin">
+                    <span>&rarr;</span>
+                </div>
+            </div>
+            <div>
+                <span>Avoid obstacles like trees and rocks</span>
+                <br>
+                <div class="img-wrapper">
+                    <img id="tree" class="instruction-img" src="images/tree3.png" alt="tree">
+                    <img id="rock" class="instruction-img" src="images/rock.png" alt="rock">
+                </div>
+            </div>
+            <div >
+                <span>Stay between the flags at all times</span>
+                <br>
+                <br>
+                <div class="img-wrapper">
+                    <img class="instruction-img" src="images/flag.png" alt="flag">
+                    <img class="instruction-img" src="images/penguin2.png" alt="penguin">
+                    <img class="instruction-img" src="images/flag.png" alt="flag">
+                </div>
+            </div>
+            <div>
+            <button class='button game-button'>Start New Game</button>
+            </div>
+        </div>
+        
         <div id="score-box">
             <span>Score: </span></span><span id="score">0</span>
         </div>
+
         <div id="pause-menu" class="menu stop-menu">
             <span>Game Paused</span>
             <img id="sleep" src="images/sleep.png" alt="sleepy-penguin">
             <span>Press Space Bar to Resume</span>
         </div>
+
         <div id="gameover-menu" class="menu stop-menu">
             <img id="gameover" src="images/game_over.png">
             <span>Your Score: 0</span>
             <br>
-            <button class="game-button">Play again?</button>
+            <button class="button game-button">Play again?</button>
         </div>
         <canvas id='game-canvas'></canvas>
 </body>
