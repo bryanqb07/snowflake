@@ -56,7 +56,7 @@ body{
     background-color: white;
 }
 
-#gameover-menu{
+.stop-menu{
     display: none;
     background-color: antiquewhite;
     z-index: 1;
@@ -64,13 +64,13 @@ body{
     margin-left: 400px;
 }
 
-#gameover-menu span{
+.stop-menu span{
     color: purple;
     font-size: 40px;
     font-family: 'Notable', sans-serif;
 }
 
-#gameover-menu img{
+.stop-menu img{
     height: 300px;
     width: 600px;
 }

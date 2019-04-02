@@ -1,17 +1,18 @@
 import MovingObject from './moving_object';
 
 class Sprite extends MovingObject {
-    constructor(position, velocity, game, width, height, src, shrink, offset, wrappable=false) {
+    constructor(position, velocity, game, dims, src, offset, wrappable=false) {
         super({
             pos: position,
             vel: velocity,
             game: game
         });
-        this.width = width;//267;
-        this.height = height; //189;
+        //dims = array[width, height, shrink]
+        this.width = dims[0];
+        this.height = dims[1]; 
+        this.shrinkFactor = dims[2];
         this.image = new Image();
         this.image.src = src;
-        this.shrinkFactor = shrink;
         this.trueWidth = this.width / this.shrinkFactor;
         this.trueHeight = this.height / this.shrinkFactor;
         this.offset = offset;
@@ -32,8 +33,8 @@ class Sprite extends MovingObject {
         );
     }
 
-    power(idx, impulse) {
-        this.options.pos[idx] += impulse;
+    power(impulse) {
+        this.options.pos[0] += impulse;
     }
 
     isCollidedWith(otherObject){

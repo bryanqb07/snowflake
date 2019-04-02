@@ -2,24 +2,63 @@ import Sprite from './sprite';
 
 class Game{
     constructor(width, height) {
+        // core game logic vars
+
         this.PADDING = 150;
         this.DIM_X = width;
         this.DIM_Y = height;
 
+        this.START_Y = 800;
+        this.OBSTACLE_VEL = [0, -5];
+
+        this.NUM_OBSTACLES = 1;
+        this.MAX_OBSTACLES = 10;
+        this.PASSED_OBSTACLES = 0;
+
+        this.level = 1;
+        this.NUM_LIVES = 1;
+        this.score = 0;
+        this.gameOv = false;
+
+        /////
+
+        // Object specs
         this.offsets = {
-            boarder: [0, 0],
-            tree: [-130, 60],
-            rock: [-208, 72]
+            fence: [0, 0],
+            finish: [0, 0],
+            lives: [0, 0],
+            penguin: [0, 0],
+            rock: [-208, 72],
+            tree: [-130, 60]
         };
 
-        this.boarder = new Sprite(
-            [this.DIM_X / 2, 100], [0,0], this, 448, 480, "images/penguin2.png", 5, [0,0]);
-        //this.testRock = new Sprite([500, 800], [0, -5], this, 900, 900, "tree.png", 4);
-        
-        this.level = 1;
+        this.dims = { //dimensions
+            fence: [634, 618, 12], // width height shrinkFactor
+            finish: [2000, 247, 1.5],
+            lives: [300, 300, 10],
+            penguin: [448, 480, 5],
+            rock: [512, 512, 2], 
+            tree: [600, 300, 1]
+        };
 
-        this.OBSTACLE_VEL = [0, -5];
-        
+        this.srcs = {
+            fence: "images/flag.png",
+            finish: "images/finish.png",
+            lives: "images/penguin_face.png",
+            penguin: "images/penguin2.png", 
+            rock: "images/rock.png",
+            tree: "images/tree3.png"
+        };
+
+        /////
+
+        /// Create core objects
+        // Sprite(position, velocity, game, dimensions, imgsrc, offsets)
+
+        this.boarder = new Sprite(
+            [this.DIM_X / 2, 100], [0,0], this, this.dims.penguin, 
+            this.srcs.penguin, this.offsets.penguin);
+
         this.fences = [];
         this.FENCE_SPACER = 80;
         this.FENCE_WIDTH = 50;
@@ -28,27 +67,22 @@ class Game{
         this.makeFences(this.DIM_X - this.FENCE_WIDTH);
 
 
-        this.dummy = new Sprite(
-            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", [-130, 60] , 1);
-        // //test
-        // this.testRock = new Sprite(
-        //     [500, 600], this.OBSTACLE_VEL, this, 512, 512, "images/rock.png", 2);
-        // // //
-        this.obstacles = [this.dummy];
-        this.NUM_OBSTACLES = 1;
-        this.MAX_OBSTACLES = 10;
-        this.PASSED_OBSTACLES = 0;        
-    
-        this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
-            this, 2000, 247, "images/finish.png", 1.5, [0,0]);
+        this.firstObstacle = new Sprite(
+            [500, 600], this.OBSTACLE_VEL, this, this.dims.tree, 
+            this.srcs.tree, this.offsets.tree);
         
-        this.NUM_LIVES = 1;
+        // this.testRock = new Sprite([500, 800], this.OBSTACLE_VEL, this, 
+        //     this.dims.rock, this.srcs.rock, this.offsets.rock);
 
-        this.penguins = []; // represents # of lives
-        this.makePenguins();
+        this.obstacles = [this.firstObstacle];
 
-        this.score = 0;
-        this.gameOv = false;
+        this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
+            this, this.dims.finish, this.srcs.finish, this.offsets.finish);
+        
+        this.lives = []; // represents # of lives
+        this.makeLives();
+
+
     }
 
     checkCollisions() {
@@ -92,7 +126,7 @@ class Game{
         }
 
         for(let i = 0; i < this.NUM_LIVES; i++){
-            this.penguins[i].draw(ctx);
+            this.lives[i].draw(ctx);
         }
     }
 
@@ -112,10 +146,14 @@ class Game{
         if(this.PASSED_OBSTACLES < this.MAX_OBSTACLES && 
             (this.obstacles[this.NUM_OBSTACLES - 1].options.pos[1] <= 600 + (5 * this.level))){
             
+            //generate tree if random num >= 1, rock otherwise
             const randObstacle = (Math.random()  * 2 >= 1) ? new Sprite(
-                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 1, [-130, 60]) :
+                [this.randXPos(), this.START_Y], this.OBSTACLE_VEL, this, this.dims.tree, 
+                this.srcs.tree, this.offsets.tree) :
                 new Sprite(
-                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 512, 512, "images/rock.png", 2, [-208, 72]);
+                [this.randXPos(), this.START_Y], this.OBSTACLE_VEL, this, this.dims.rock,
+                 this.srcs.rock, this.offsets.rock);
+
             this.obstacles.push(randObstacle);
             this.NUM_OBSTACLES++;
         }
@@ -124,14 +162,14 @@ class Game{
     makeFences(shift){
         for(let i = 0; i < this.FENCE_SPACER * this.MAX_FENCES; i += this.FENCE_SPACER){
             this.fences.push(new Sprite([shift, this.DIM_Y - i], this.OBSTACLE_VEL, this,
-                634, 618, "images/flag.png", 12, [0,0], true));
+                this.dims.fence, this.srcs.fence, this.offsets.fence, true));
         }
     }
 
-    makePenguins() {
+    makeLives() {
         for (let i = 0; i < this.NUM_LIVES; i++) {
-            this.penguins.push(new Sprite([50 + i * 30, 25], [0, 0], this,
-                300, 300, "images/penguin_face.png", 10, false));
+            this.lives.push(new Sprite([50 + i * 30, 25], [0, 0], this,
+                this.dims.lives, this.srcs.lives, this.offsets.lives, false));
         }
     }
 
@@ -165,8 +203,8 @@ class Game{
         this.boarder.options.pos = [this.DIM_X / 2, 100];
         this.boarder.options.vel = [0,0];
         this.finishLine.options.pos[1] = 1000;
-        this.dummy.options.pos = [500, 600]; 
-        this.obstacles = [this.dummy];
+        this.firstObstacle.options.pos = [500, 600]; 
+        this.obstacles = [this.firstObstacle];
         this.PASSED_OBSTACLES = 0;
         this.NUM_OBSTACLES = 1;
         this.MAX_OBSTACLES += (this.level * 5);
@@ -182,7 +220,7 @@ class Game{
             }
             else{ // level failed cond
                 this.NUM_LIVES--;
-                this.penguins.pop();
+                this.lives.pop();
                 if (this.NUM_LIVES > 0) {
                     this.restart(); // try again if lives left
                 } else {
@@ -191,8 +229,8 @@ class Game{
             }
         }
         else{ // play on
-            console.log("passed: ", this.PASSED_OBSTACLES);
-            console.log("max : ", this.MAX_OBSTACLES);
+            // console.log("passed: ", this.PASSED_OBSTACLES);
+            // console.log("max : ", this.MAX_OBSTACLES);
             this.score += this.level;
             this.generateObstacle();
             this.move();
