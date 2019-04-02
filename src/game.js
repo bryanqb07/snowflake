@@ -5,9 +5,17 @@ class Game{
         this.PADDING = 150;
         this.DIM_X = width;
         this.DIM_Y = height;
+
+        this.offsets = {
+            boarder: [0, 0],
+            tree: [-130, 60],
+            rock: [-208, 72]
+        };
+
         this.boarder = new Sprite(
-            [this.DIM_X / 2, 100], [0,0], this, 448, 480, "images/penguin2.png", 5);
+            [this.DIM_X / 2, 100], [0,0], this, 448, 480, "images/penguin2.png", 5, [0,0]);
         //this.testRock = new Sprite([500, 800], [0, -5], this, 900, 900, "tree.png", 4);
+        
         this.level = 1;
 
         this.OBSTACLE_VEL = [0, -5];
@@ -19,8 +27,9 @@ class Game{
         this.makeFences(0);
         this.makeFences(this.DIM_X - this.FENCE_WIDTH);
 
+
         this.dummy = new Sprite(
-            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 1);
+            [500, 600], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", [-130, 60] , 1);
         // //test
         // this.testRock = new Sprite(
         //     [500, 600], this.OBSTACLE_VEL, this, 512, 512, "images/rock.png", 2);
@@ -31,7 +40,7 @@ class Game{
         this.PASSED_OBSTACLES = 0;        
     
         this.finishLine = new Sprite([this.FENCE_WIDTH - 25, 1000], this.OBSTACLE_VEL,
-            this, 2000, 247, "images/finish.png", 1.5);
+            this, 2000, 247, "images/finish.png", 1.5, [0,0]);
         
         this.NUM_LIVES = 1;
 
@@ -85,9 +94,6 @@ class Game{
         for(let i = 0; i < this.NUM_LIVES; i++){
             this.penguins[i].draw(ctx);
         }
-        
-        
-        
     }
 
     isOutofBounds(pos) {
@@ -104,12 +110,12 @@ class Game{
 
     generateObstacle(){
         if(this.PASSED_OBSTACLES < this.MAX_OBSTACLES && 
-            (this.obstacles[this.NUM_OBSTACLES - 1].options.pos[1] <= 600 + 5 * this.level)){
+            (this.obstacles[this.NUM_OBSTACLES - 1].options.pos[1] <= 600 + (5 * this.level))){
             
             const randObstacle = (Math.random()  * 2 >= 1) ? new Sprite(
-                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 1) :
+                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 600, 300, "images/tree3.png", 1, [-130, 60]) :
                 new Sprite(
-                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 512, 512, "images/rock.png", 2);
+                [this.randXPos(), 800], this.OBSTACLE_VEL, this, 512, 512, "images/rock.png", 2, [-208, 72]);
             this.obstacles.push(randObstacle);
             this.NUM_OBSTACLES++;
         }
@@ -118,7 +124,7 @@ class Game{
     makeFences(shift){
         for(let i = 0; i < this.FENCE_SPACER * this.MAX_FENCES; i += this.FENCE_SPACER){
             this.fences.push(new Sprite([shift, this.DIM_Y - i], this.OBSTACLE_VEL, this,
-                634, 618, "images/flag.png", 12, true));
+                634, 618, "images/flag.png", 12, [0,0], true));
         }
     }
 
@@ -147,8 +153,8 @@ class Game{
     }
 
     randXPos(){
-        let xVal = -20;
-        while (xVal <= -20 || xVal > this.DIM_X - this.PADDING - 150 - 20) {
+        let xVal = 0;
+        while (xVal <= 0 || xVal > this.DIM_X - this.PADDING - 150 - 20) {
                 xVal = Math.floor(Math.random() * this.DIM_X - 20);
         }
         return xVal;
@@ -160,11 +166,10 @@ class Game{
         this.boarder.options.vel = [0,0];
         this.finishLine.options.pos[1] = 1000;
         this.dummy.options.pos = [500, 600]; 
-        
         this.obstacles = [this.dummy];
         this.PASSED_OBSTACLES = 0;
         this.NUM_OBSTACLES = 1;
-        this.MAX_OBSTACLES += this.level * 5;
+        this.MAX_OBSTACLES += (this.level * 5);
     }
 
     step() {
@@ -179,13 +184,15 @@ class Game{
                 this.NUM_LIVES--;
                 this.penguins.pop();
                 if (this.NUM_LIVES > 0) {
-                    this.restart();
+                    this.restart(); // try again if lives left
                 } else {
                    this.gameOv = true; // game over cond
                 }
             }
         }
         else{ // play on
+            console.log("passed: ", this.PASSED_OBSTACLES);
+            console.log("max : ", this.MAX_OBSTACLES);
             this.score += this.level;
             this.generateObstacle();
             this.move();

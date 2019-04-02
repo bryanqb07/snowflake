@@ -1,7 +1,7 @@
 import MovingObject from './moving_object';
 
 class Sprite extends MovingObject {
-    constructor(position, velocity, game, width, height, src, shrink, wrappable=false) {
+    constructor(position, velocity, game, width, height, src, shrink, offset, wrappable=false) {
         super({
             pos: position,
             vel: velocity,
@@ -14,10 +14,8 @@ class Sprite extends MovingObject {
         this.shrinkFactor = shrink;
         this.trueWidth = this.width / this.shrinkFactor;
         this.trueHeight = this.height / this.shrinkFactor;
+        this.offset = offset;
         this.isWrappable = wrappable;
-        // this.offSets = {
-        //     tree: []
-        // }
     }
 
     draw(ctx) {
@@ -40,19 +38,20 @@ class Sprite extends MovingObject {
 
     isCollidedWith(otherObject){
 
-        // pictures widths vary by obstacle 
-        const kludge = otherObject.width == 600 ? [-130, 60] : [-208, 72];
-        // console.log(kludge);
+        
         const dx = this.options.pos[0] - otherObject.options.pos[0] - otherObject.trueWidth / 2;
         // console.log("boarder truewidth: ", this.trueWidth);
         // console.log("boarder x pos: ", this.options.pos[0]);
         // console.log("obj truewidth: ", otherObject.trueWidth);
         // console.log("obj x pos: ", this.options.pos[0]);
         // console.log(dx);
+        
+        // pictures widths vary by obstacle -- so we need to account for offset
+
 
         const dy = Math.abs( (this.options.pos[1] - (otherObject.options.pos[1] + otherObject.trueHeight / 2)));
         
-        return dy <= Math.abs(otherObject.options.vel[1]) && (dx <= 0 && dx > kludge[0] || dx > 0 && dx < kludge[1]); 
+        return dy <= Math.abs(otherObject.options.vel[1]) && (dx <= 0 && dx > otherObject.offset[0] || dx > 0 && dx < otherObject.offset[1]); 
         
     }
 }
