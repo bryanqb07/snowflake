@@ -62,7 +62,8 @@ class Game{
             }
         }
 
-        if (this.boarder.options.pos[0] < 0 || this.boarder.options.pos[0] > 1300){
+        if (this.boarder.options.pos[0] < this.FENCE_WIDTH || 
+            this.boarder.options.pos[0] > this.DIM_X - this.FENCE_WIDTH - 100){
             this.die();
         }
     }
