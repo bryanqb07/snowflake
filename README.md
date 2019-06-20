@@ -11,7 +11,11 @@ Project Description: Simple javascript game involving Penguin skiing down mounta
 Goal: Avoid obstacles by using the left and right arrow keys to move penguin. Stay between
 the flags.
 
+<img src="bin/images/instructions.png" />
+
 Languages: Pure javascript, HTML, and CSS. Webpack used to bundle js files.
+
+<img src="bin/images/gameplay.png" />
 
 Notes: Game optimized for play on laptop screens. 
 
