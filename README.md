@@ -1,6 +1,6 @@
 # snowflake
 
-<img src="bin/images/title.png />
+<img src="bin/images/title.png" />
 
 Author: Bryan Lynch
 Date: April 02, 2019
