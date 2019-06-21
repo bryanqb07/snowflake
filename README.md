@@ -1,6 +1,6 @@
 # snowflake
 
-<img src="bin/images/title.png" />
+<img src="images/title.png" />
 
 Author: Bryan Lynch
 Date: April 02, 2019
@@ -11,11 +11,11 @@ Project Description: Simple javascript game involving Penguin skiing down mounta
 Goal: Avoid obstacles by using the left and right arrow keys to move penguin. Stay between
 the flags.
 
-<img src="bin/images/instructions.png" />
+<img src="images/instructions.png" />
 
 Languages: Pure javascript, HTML, and CSS. Webpack used to bundle js files.
 
-<img src="bin/images/gameplay.png" />
+<img src="images/gameplay.png" />
 
 Notes: Game optimized for play on laptop screens. 
 
