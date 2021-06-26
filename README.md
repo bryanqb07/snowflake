@@ -8,6 +8,8 @@ Version: 1.0.0
 
 Project Description: Simple javascript game involving Penguin skiing down mountain.
 
+Demo: https://bryanqb07.github.io/snowflake/
+
 Goal: Avoid obstacles by using the left and right arrow keys to move penguin. Stay between
 the flags.
 
